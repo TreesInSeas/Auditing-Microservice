@@ -80,3 +80,24 @@ def add_to_audit_log():
         "message": "Audit log added successfully.",
         "log": new_log
     }), 201
+
+@app.route("/audit", methods=["GET"])
+def get_audit_log():
+    email = request.args.get("email")
+    logs = load_logs()
+
+    if email:
+        if not is_valid_email(email):
+            return jsonify({
+                "success": False,
+                "error": "Invalid email format."
+            }), 400
+
+        email = email.strip().lower()
+        logs = [log for log in logs if log.get("email") == email]
+
+    return jsonify({
+        "success": True,
+        "count": len(logs),
+        "logs": logs
+    }), 200
