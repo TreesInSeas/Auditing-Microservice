@@ -9,3 +9,15 @@ def client(tmp_path, monkeypatch):
     audit_app.app.config["TESTING"] = True
     with audit_app.app.test_client() as client:
         yield client
+def test_add_valid_audit_log(client):
+    response = client.post("/audit", json={
+        "email": "user@example.com",
+        "text": "Created an account"
+    })
+
+    assert response.status_code == 201
+    data = response.get_json()
+    assert data["success"] is True
+    assert data["log"]["email"] == "user@example.com"
+    assert data["log"]["text"] == "Created an account"
+    assert "timestamp" in data["log"]
