@@ -28,3 +28,7 @@ def load_logs() -> list:
             return data if isinstance(data, list) else []
     except json.JSONDecodeError:
         return []
+def save_logs(logs: list) -> None:
+    """Save audit logs to the JSON file."""
+    with LOG_FILE.open("w", encoding="utf-8") as file:
+        json.dump(logs, file, indent=2)
