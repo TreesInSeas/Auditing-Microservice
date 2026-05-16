@@ -101,3 +101,14 @@ def get_audit_log():
         "count": len(logs),
         "logs": logs
     }), 200
+@app.route("/health", methods=["GET"])
+def health_check():
+    """Simple health check endpoint."""
+    return jsonify({
+        "success": True,
+        "message": "Auditing microservice is running."
+    }), 200
+
+
+if __name__ == "__main__":
+    app.run(host="127.0.0.1", port=1234, debug=True)
