@@ -61,3 +61,14 @@ def test_get_all_audit_logs(client):
     data = response.get_json()
     assert data["success"] is True
     assert data["count"] == 2
+def test_get_logs_filtered_by_email(client):
+    client.post("/audit", json={"email": "a@example.com", "text": "First event"})
+    client.post("/audit", json={"email": "b@example.com", "text": "Second event"})
+
+    response = client.get("/audit?email=a@example.com")
+
+    assert response.status_code == 200
+    data = response.get_json()
+    assert data["success"] is True
+    assert data["count"] == 1
+    assert data["logs"][0]["email"] == "a@example.com"
